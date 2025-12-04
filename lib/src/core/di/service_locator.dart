@@ -9,36 +9,46 @@ import 'package:ecommerce_sample/src/presentation/bloc/product_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 
-final GetIt serviceLocator = GetIt.instance;
+class ServiceLocator {
+  static final GetIt _instance = GetIt.instance;
 
-Future<void> setupServiceLocator() async {
-  //! Features - Product
+  static GetIt get instance => _instance;
 
-  // Bloc (or other State Management)
-  serviceLocator.registerFactory(() => ProductBloc(
-        getAllProductsUseCase: serviceLocator(),
-        getProductByIdUseCase: serviceLocator(),
-        addProductUseCase: serviceLocator(),
-      ));
+  static setUp() {
+    _setUpProductFeature();
+    _setUpExternal();
+  }
 
-  // Use cases
-  serviceLocator.registerFactory(() => GetAllProductsUseCase(serviceLocator()));
-  serviceLocator.registerFactory(() => GetProductByIdUseCase(serviceLocator()));
-  serviceLocator.registerFactory(() => AddProductUseCase(serviceLocator()));
+  static void _setUpProductFeature() {
+    //! Features - Product
 
-  // Repository
-  serviceLocator.registerFactory<ProductRepository>(
-    () => ProductRepositoryImpl(remoteDatasource: serviceLocator()),
-  );
+    // Bloc (or other State Management)
+    _instance.registerFactory(
+      () => ProductBloc(
+        getAllProductsUseCase: _instance(),
+        getProductByIdUseCase: _instance(),
+        addProductUseCase: _instance(),
+      ),
+    );
 
-  // Data sources
-  serviceLocator.registerFactory<ProductRemoteDatasource>(
-    () => ProductRemoteDatasourceImpl(client: serviceLocator()),
-  );
+    // Use cases
+    _instance.registerFactory(() => GetAllProductsUseCase(_instance()));
+    _instance.registerFactory(() => GetProductByIdUseCase(_instance()));
+    _instance.registerFactory(() => AddProductUseCase(_instance()));
 
-  //! Core
-  // No core dependencies specified yet, but NetworkInfo would go here.
+    // Repository
+    _instance.registerFactory<ProductRepository>(
+      () => ProductRepositoryImpl(remoteDatasource: _instance()),
+    );
 
-  //! External
-  serviceLocator.registerFactory(() => http.Client());
+    // Data sources
+    _instance.registerFactory<ProductRemoteDatasource>(
+      () => ProductRemoteDatasourceImpl(client: _instance()),
+    );
+  }
+
+  static void _setUpExternal() {
+    //! External
+    _instance.registerFactory(() => http.Client());
+  }
 }
