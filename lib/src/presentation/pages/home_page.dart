@@ -1,6 +1,6 @@
 import 'package:ecommerce_sample/src/core/di/service_locator.dart';
-import 'package:ecommerce_sample/src/domain/entities/product.dart';
-import 'package:ecommerce_sample/src/domain/entities/rating.dart';
+import 'package:ecommerce_sample/src/domain/entities/product_entity.dart';
+import 'package:ecommerce_sample/src/domain/entities/rating_entity.dart';
 import 'package:ecommerce_sample/src/presentation/bloc/product_bloc.dart';
 import 'package:ecommerce_sample/src/presentation/bloc/product_event.dart';
 import 'package:ecommerce_sample/src/presentation/bloc/product_state.dart';
@@ -67,14 +67,14 @@ class _HomeView extends StatelessWidget {
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () {
-                      final newProduct = Product(
+                      final newProduct = ProductEntity(
                         id: 0,
                         title: 'Test Product',
                         price: 13.5,
                         description: 'A test product',
                         image: 'https://i.pravatar.cc',
                         category: 'electronic',
-                        rating: const Rating(rate: 4.5, count: 120),
+                        rating: const RatingEntity(rate: 4.5, count: 120),
                       );
                       context.read<ProductBloc>().add(
                         AddProductEvent(newProduct),

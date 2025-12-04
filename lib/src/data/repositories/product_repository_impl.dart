@@ -7,7 +7,7 @@ import 'package:ecommerce_sample/src/core/error/failures.dart';
 import 'package:ecommerce_sample/src/data/datasources/product_remote_datasource.dart';
 import 'package:ecommerce_sample/src/data/models/product_model.dart';
 import 'package:ecommerce_sample/src/data/models/rating_model.dart';
-import 'package:ecommerce_sample/src/domain/entities/product.dart';
+import 'package:ecommerce_sample/src/domain/entities/product_entity.dart';
 import 'package:ecommerce_sample/src/domain/repositories/product_repository.dart';
 
 class ProductRepositoryImpl implements ProductRepository {
@@ -16,7 +16,7 @@ class ProductRepositoryImpl implements ProductRepository {
   ProductRepositoryImpl({required this.remoteDatasource});
 
   @override
-  Future<Either<Failure, List<Product>>> getAllProducts() async {
+  Future<Either<Failure, List<ProductEntity>>> getAllProducts() async {
     try {
       final remoteProducts = await remoteDatasource.getAllProducts();
       return Right(remoteProducts.map((model) => model.toEntity()).toList());
@@ -32,7 +32,7 @@ class ProductRepositoryImpl implements ProductRepository {
   }
 
   @override
-  Future<Either<Failure, Product>> getProductById(int id) async {
+  Future<Either<Failure, ProductEntity>> getProductById(int id) async {
     try {
       final remoteProduct = await remoteDatasource.getProductById(id);
       return Right(remoteProduct.toEntity());
@@ -48,20 +48,25 @@ class ProductRepositoryImpl implements ProductRepository {
   }
 
   @override
-  Future<Either<Failure, int>> addProduct(Product product) async {
+  Future<Either<Failure, int>> addProduct(ProductEntity product) async {
     try {
       // FakeStoreAPI expects a ProductModel for adding, it returns a ProductModel too.
       // We pass the entity and convert it to model for the datasource
       // The API doesn't return the full created product, just a confirmation with an ID.
-      final addedProduct = await remoteDatasource.addProduct(ProductModel(
-        id: product.id,
-        title: product.title,
-        price: product.price,
-        description: product.description,
-        category: product.category,
-        image: product.image,
-        rating: RatingModel(rate: product.rating.rate, count: product.rating.count),
-      ));
+      final addedProduct = await remoteDatasource.addProduct(
+        ProductModel(
+          id: product.id,
+          title: product.title,
+          price: product.price,
+          description: product.description,
+          category: product.category,
+          image: product.image,
+          rating: RatingModel(
+            rate: product.rating.rate,
+            count: product.rating.count,
+          ),
+        ),
+      );
       return Right(addedProduct.id);
     } on ServerException catch (e) {
       return Left(ServerFailure(message: e.message));

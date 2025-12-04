@@ -1,5 +1,5 @@
 import 'package:ecommerce_sample/src/data/models/rating_model.dart';
-import 'package:ecommerce_sample/src/domain/entities/product.dart';
+import 'package:ecommerce_sample/src/domain/entities/product_entity.dart';
 
 class ProductModel {
   final int id;
@@ -44,8 +44,8 @@ class ProductModel {
     };
   }
 
-  Product toEntity() {
-    return Product(
+  ProductEntity toEntity() {
+    return ProductEntity(
       id: id,
       title: title,
       price: price,

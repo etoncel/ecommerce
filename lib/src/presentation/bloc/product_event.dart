@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:ecommerce_sample/src/domain/entities/product.dart';
+import 'package:ecommerce_sample/src/domain/entities/product_entity.dart';
 
 abstract class ProductEvent extends Equatable {
   const ProductEvent();
@@ -20,7 +20,7 @@ class GetProductByIdEvent extends ProductEvent {
 }
 
 class AddProductEvent extends ProductEvent {
-  final Product product;
+  final ProductEntity product;
 
   const AddProductEvent(this.product);
 

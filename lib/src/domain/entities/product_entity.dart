@@ -1,16 +1,16 @@
-import 'package:ecommerce_sample/src/domain/entities/rating.dart';
+import 'package:ecommerce_sample/src/domain/entities/rating_entity.dart';
 import 'package:equatable/equatable.dart';
 
-class Product extends Equatable {
+class ProductEntity extends Equatable {
   final int id;
   final String title;
   final double price;
   final String description;
   final String category;
   final String image;
-  final Rating rating;
+  final RatingEntity rating;
 
-  const Product({
+  const ProductEntity({
     required this.id,
     required this.title,
     required this.price,
@@ -22,12 +22,12 @@ class Product extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        title,
-        price,
-        description,
-        category,
-        image,
-        rating,
-      ];
+    id,
+    title,
+    price,
+    description,
+    category,
+    image,
+    rating,
+  ];
 }
