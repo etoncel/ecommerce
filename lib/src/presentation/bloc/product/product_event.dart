@@ -1,5 +1,5 @@
+import 'package:ecommerce_package_sample/ecommerce_package_sample.dart';
 import 'package:equatable/equatable.dart';
-import 'package:ecommerce_sample/src/domain/entities/product_entity.dart';
 
 abstract class ProductEvent extends Equatable {
   const ProductEvent();

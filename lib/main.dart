@@ -1,4 +1,5 @@
-import 'package:ecommerce_sample/src/core/di/service_locator.dart';
+import 'package:ecommerce_package_sample/ecommerce_package_sample.dart';
+
 import 'package:ecommerce_sample/src/presentation/pages/home_page.dart';
 import 'package:flutter/material.dart';
 
