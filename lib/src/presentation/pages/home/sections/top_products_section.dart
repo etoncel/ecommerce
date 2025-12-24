@@ -20,28 +20,32 @@ class TopProductsSection extends StatelessWidget {
         }
 
         if (state is AllProductsLoaded) {
-          return HorizontalProductList(
-            productCards: state.products
-                .where((product) => product.rating.rate >= 4.0)
-                .map(
-                  (product) => ProductCard(
-                    imageUrl: product.image,
-                    title: product.title,
-                    subtitle: "${product.price}",
-                    rating: product.rating.rate,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              DetailPage(productEntity: product),
-                        ),
-                      );
-                    },
-                  ),
-                )
-                .toList(),
-            title: "Productos Destacados",
+          return Container(
+            decoration: BoxDecoration(),
+            clipBehavior: Clip.hardEdge,
+            child: HorizontalProductList(
+              productCards: state.products
+                  .where((product) => product.rating.rate >= 4.0)
+                  .map(
+                    (product) => ProductCard(
+                      imageUrl: product.image,
+                      title: product.title,
+                      subtitle: "${product.price}",
+                      rating: product.rating.rate,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                DetailPage(productEntity: product),
+                          ),
+                        );
+                      },
+                    ),
+                  )
+                  .toList(),
+              title: "Productos Destacados",
+            ),
           );
         }
 
