@@ -22,7 +22,7 @@ class TopProductsSection extends StatelessWidget {
         if (state is AllProductsLoaded) {
           return Container(
             decoration: BoxDecoration(),
-            clipBehavior: Clip.hardEdge,
+            clipBehavior: Clip.none,
             child: HorizontalProductList(
               productCards: state.products
                   .where((product) => product.rating.rate >= 4.0)

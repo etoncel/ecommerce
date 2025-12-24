@@ -77,11 +77,9 @@ packages:
   ecommerce_sample_design_system:
     dependency: "direct main"
     description:
-      path: "."
-      ref: "v0.0.4"
-      resolved-ref: "04da70646033e7c5ce7b94e0765efca886ed30b8"
-      url: "git@github.com:etoncel/ecommerce_design_system.git"
-    source: git
+      path: "../paquetes_flutter/ecommerce_sample_design_system"
+      relative: true
+    source: path
     version: "0.0.4"
   equatable:
     dependency: "direct main"
