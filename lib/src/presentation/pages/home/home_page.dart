@@ -47,6 +47,7 @@ class _HomePageView extends StatelessWidget {
       title: "Home",
       firstSection: CategoriesSection(),
       secondSection: TopProductsSection(),
+      thirdSection: TopProductsSection(),
     );
   }
 }

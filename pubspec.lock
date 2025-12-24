@@ -78,11 +78,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "v0.0.3"
-      resolved-ref: "23b6ae588c9201e0c9a47aebcc811475f93a4e92"
+      ref: "v0.0.4"
+      resolved-ref: "04da70646033e7c5ce7b94e0765efca886ed30b8"
       url: "git@github.com:etoncel/ecommerce_design_system.git"
     source: git
-    version: "0.0.3"
+    version: "0.0.4"
   equatable:
     dependency: "direct main"
     description:

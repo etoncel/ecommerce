@@ -1,5 +1,6 @@
 import 'package:ecommerce_sample/src/presentation/bloc/product/product_bloc.dart';
 import 'package:ecommerce_sample/src/presentation/bloc/product/product_state.dart';
+import 'package:ecommerce_sample/src/presentation/pages/detail/detail_page.dart';
 import 'package:ecommerce_sample_design_system/ecommerce_sample_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,6 +29,15 @@ class TopProductsSection extends StatelessWidget {
                     title: product.title,
                     subtitle: "${product.price}",
                     rating: product.rating.rate,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              DetailPage(productEntity: product),
+                        ),
+                      );
+                    },
                   ),
                 )
                 .toList(),

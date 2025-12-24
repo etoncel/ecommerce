@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 class HomeTemplate extends StatelessWidget {
   final Widget firstSection;
   final Widget secondSection;
+  final Widget thirdSection;
   final String title;
   const HomeTemplate({
     super.key,
     required this.title,
     required this.firstSection,
     required this.secondSection,
+    required this.thirdSection,
   });
 
   @override
@@ -19,7 +21,12 @@ class HomeTemplate extends StatelessWidget {
       appBar: CustomAppBar(title: title),
       body: SingleChildScrollView(
         child: Column(
-          children: [firstSection, AppSpacing.verticalL, secondSection],
+          children: [
+            firstSection,
+            AppSpacing.verticalL,
+            secondSection,
+            thirdSection,
+          ],
         ),
       ),
     );
