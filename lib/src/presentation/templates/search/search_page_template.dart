@@ -2,19 +2,40 @@ import 'package:ecommerce_sample_design_system/ecommerce_sample_design_system.da
 import 'package:flutter/material.dart';
 
 /// Plantilla que muestra una pantalla de resultados
-/// del componente barra de búsqueda
+/// del componente barra de búsqueda. Es un widget sin estado que
+/// recibe todos los datos y callbacks necesarios para renderizar la UI.
 class SearchPageTemplate extends StatelessWidget {
-  static const categories = [
-    "men's clothing",
-    "jewerly",
-    "electronics",
-    "women's clothing",
-  ];
+  /// Controlador para la barra de búsqueda.
+  final TextEditingController searchController;
 
-  /// Texto que se ha ingresado en el buscador. Se utiliza
-  /// para iniciar la búsqueda] de productos
-  final String searchText;
-  const SearchPageTemplate({super.key, required this.searchText});
+  /// Callback que se ejecuta cuando el texto en la barra de búsqueda es enviado.
+  final ValueChanged<String> onSearchSubmitted;
+
+  /// Título para la lista de productos.
+  final String productListTitle;
+
+  /// Lista de widgets de tarjeta de producto para mostrar.
+  final List<ProductCard> productCards;
+
+  /// Indicador de si se está cargando la data.
+  final bool isLoading;
+
+  /// Mensaje de error a mostrar, si existe alguno.
+  final String? errorMessage;
+
+  /// Mensaje a mostrar cuando no se encuentran productos.
+  final String? noProductsMessage;
+
+  const SearchPageTemplate({
+    super.key,
+    required this.searchController,
+    required this.onSearchSubmitted,
+    required this.productListTitle,
+    required this.productCards,
+    this.isLoading = false,
+    this.errorMessage,
+    this.noProductsMessage,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +50,13 @@ class SearchPageTemplate extends StatelessWidget {
                 Container(color: AppColors.background),
                 Center(
                   child: Container(
-                    constraints: BoxConstraints(maxWidth: 1200),
-                    child: CustomAppBar(showSearchBar: true),
+                    constraints: const BoxConstraints(maxWidth: 1200),
+                    child: CustomAppBar(
+                      showSearchBar: true,
+                      searchController: searchController,
+                      onSubmitted: onSearchSubmitted,
+                      // onSearchChanged ya no se usa directamente aquí
+                    ),
                   ),
                 ),
               ],
@@ -38,56 +64,27 @@ class SearchPageTemplate extends StatelessWidget {
             AppSpacing.verticalL,
             Expanded(
               child: Container(
-                constraints: BoxConstraints(maxWidth: 1200),
+                constraints: const BoxConstraints(maxWidth: 1200),
                 child: SingleChildScrollView(
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Flexible(
+                      const Flexible(
                         flex: 2,
                         child: SizedBox(
                           width: double.infinity,
-
                           child: Column(
                             children: [
                               AppText(
                                 text: "Categories",
                                 style: AppTextStyles.headline2,
                               ),
-                              ...[
-                                SizedBox(
-                                  height: 400,
-                                  child: ListView.builder(
-                                    shrinkWrap: true,
-                                    physics: NeverScrollableScrollPhysics(),
-                                    itemCount: categories.length,
-                                    itemBuilder: (context, index) {
-                                      return AppText(
-                                        text: categories[index],
-                                        style: AppTextStyles.caption,
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ],
+                              // ... Aquí iría la lista de categorías si fuera dinámica
                             ],
                           ),
                         ),
                       ),
-                      Flexible(
-                        flex: 6,
-                        child: VerticalProductList(
-                          title: "Lista",
-                          productCards: List.generate(20, (index) {
-                            return ProductCard(
-                              imageUrl: '',
-                              title: 'Prod $index',
-                              subtitle: 'subtitle',
-                              cardOrientation: Axis.horizontal,
-                            );
-                          }),
-                        ),
-                      ),
+                      Flexible(flex: 6, child: _buildContent()),
                     ],
                   ),
                 ),
@@ -96,6 +93,32 @@ class SearchPageTemplate extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildContent() {
+    if (isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (errorMessage != null) {
+      return Center(
+        child: AppText(
+          text: "Error: $errorMessage",
+          style: AppTextStyles.headline1,
+        ),
+      );
+    }
+    if (noProductsMessage != null) {
+      return Center(
+        child: AppText(
+          text: noProductsMessage!,
+          style: AppTextStyles.headline1,
+        ),
+      );
+    }
+    return VerticalProductList(
+      title: productListTitle,
+      productCards: productCards,
     );
   }
 }
