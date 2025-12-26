@@ -4,6 +4,13 @@ import 'package:flutter/material.dart';
 /// Plantilla que muestra una pantalla de resultados
 /// del componente barra de búsqueda
 class SearchPageTemplate extends StatelessWidget {
+  static const categories = [
+    "men's clothing",
+    "jewerly",
+    "electronics",
+    "women's clothing",
+  ];
+
   /// Texto que se ha ingresado en el buscador. Se utiliza
   /// para iniciar la búsqueda] de productos
   final String searchText;
@@ -14,14 +21,24 @@ class SearchPageTemplate extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Center(
-        child: Container(
-          constraints: BoxConstraints(maxWidth: 1200),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              CustomAppBar(showSearchBar: true),
-              AppSpacing.verticalL,
-              Expanded(
+        child: Column(
+          children: [
+            Stack(
+              alignment: AlignmentGeometry.center,
+              children: [
+                Container(color: AppColors.background),
+                Center(
+                  child: Container(
+                    constraints: BoxConstraints(maxWidth: 1200),
+                    child: CustomAppBar(showSearchBar: true),
+                  ),
+                ),
+              ],
+            ),
+            AppSpacing.verticalL,
+            Expanded(
+              child: Container(
+                constraints: BoxConstraints(maxWidth: 1200),
                 child: SingleChildScrollView(
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,10 +47,30 @@ class SearchPageTemplate extends StatelessWidget {
                         flex: 2,
                         child: SizedBox(
                           width: double.infinity,
-                          height: 400,
-                          child: AppText(
-                            text: "Categories",
-                            style: AppTextStyles.headline2,
+
+                          child: Column(
+                            children: [
+                              AppText(
+                                text: "Categories",
+                                style: AppTextStyles.headline2,
+                              ),
+                              ...[
+                                SizedBox(
+                                  height: 400,
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemCount: categories.length,
+                                    itemBuilder: (context, index) {
+                                      return AppText(
+                                        text: categories[index],
+                                        style: AppTextStyles.caption,
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ],
                           ),
                         ),
                       ),
@@ -55,8 +92,8 @@ class SearchPageTemplate extends StatelessWidget {
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
