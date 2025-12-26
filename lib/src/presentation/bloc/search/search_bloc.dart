@@ -26,8 +26,21 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
                 product.title.toLowerCase().contains(event.query.toLowerCase()),
           )
           .toList();
+
+      // Calcular la cantidad de productos por categoría de los productos FILTRADOS
+      final categoryQuantities = <String, int>{};
+      for (var product in filteredProducts) {
+        categoryQuantities[product.category] =
+            (categoryQuantities[product.category] ?? 0) + 1;
+      }
+
       emit(
-        SearchLoaded(allProducts: products, displayProducts: filteredProducts),
+        SearchLoaded(
+          allProducts: products,
+          displayProducts: filteredProducts,
+          categoryQuantities: categoryQuantities,
+          searchQuery: event.query,
+        ),
       );
     });
   }

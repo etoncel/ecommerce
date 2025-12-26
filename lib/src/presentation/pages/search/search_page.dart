@@ -14,7 +14,7 @@ class SearchPage extends StatelessWidget {
     return BlocProvider(
       create: (context) =>
           SearchBloc(getAllProductsUseCase: ServiceLocator.instance.get())
-            ..add(SearchProducts(searchText)), // Iniciar con una búsqueda
+            ..add(SearchProducts(searchText)),
       child: _SearchPageView(initialSearchText: searchText),
     );
   }
@@ -52,6 +52,7 @@ class _SearchPageViewState extends State<_SearchPageView> {
         String? noProductsMessage;
         List<ProductCard> productCards = [];
         String title = "Productos";
+        List<QuantityIndicator> categoryIndicators = []; // Initialize here
 
         if (state is SearchError) {
           errorMessage = state.message;
@@ -68,14 +69,19 @@ class _SearchPageViewState extends State<_SearchPageView> {
               title: product.title,
               subtitle: "${product.price}",
               cardOrientation: Axis.horizontal,
+              rating: product.rating.rate,
             );
+          }).toList();
+
+          // Construir la lista de QuantityIndicator a partir del estado del bloc
+          categoryIndicators = state.categoryQuantities.entries.map((entry) {
+            return QuantityIndicator(name: entry.key, quantity: entry.value);
           }).toList();
         }
 
         return SearchPageTemplate(
           searchController: _searchController,
           onSearchSubmitted: (query) {
-            // Despachar el evento de búsqueda cuando el usuario envía el formulario
             context.read<SearchBloc>().add(SearchProducts(query));
           },
           isLoading: isLoading,
@@ -83,6 +89,7 @@ class _SearchPageViewState extends State<_SearchPageView> {
           noProductsMessage: noProductsMessage,
           productListTitle: title,
           productCards: productCards,
+          categoryIndicators: categoryIndicators, // Pasar la lista al template
         );
       },
     );

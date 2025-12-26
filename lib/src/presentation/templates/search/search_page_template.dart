@@ -17,6 +17,9 @@ class SearchPageTemplate extends StatelessWidget {
   /// Lista de widgets de tarjeta de producto para mostrar.
   final List<ProductCard> productCards;
 
+  /// Lista de indicadores de categoría para mostrar.
+  final List<QuantityIndicator> categoryIndicators;
+
   /// Indicador de si se está cargando la data.
   final bool isLoading;
 
@@ -32,6 +35,7 @@ class SearchPageTemplate extends StatelessWidget {
     required this.onSearchSubmitted,
     required this.productListTitle,
     required this.productCards,
+    required this.categoryIndicators,
     this.isLoading = false,
     this.errorMessage,
     this.noProductsMessage,
@@ -55,7 +59,6 @@ class SearchPageTemplate extends StatelessWidget {
                       showSearchBar: true,
                       searchController: searchController,
                       onSubmitted: onSearchSubmitted,
-                      // onSearchChanged ya no se usa directamente aquí
                     ),
                   ),
                 ),
@@ -69,17 +72,21 @@ class SearchPageTemplate extends StatelessWidget {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Flexible(
+                      Flexible(
                         flex: 2,
                         child: SizedBox(
                           width: double.infinity,
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              AppText(
+                              const AppText(
                                 text: "Categories",
                                 style: AppTextStyles.headline2,
                               ),
-                              // ... Aquí iría la lista de categorías si fuera dinámica
+                              AppSpacing.verticalM,
+                              QuantityIndicatorList(
+                                indicators: categoryIndicators,
+                              ),
                             ],
                           ),
                         ),
