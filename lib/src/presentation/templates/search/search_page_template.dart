@@ -1,3 +1,4 @@
+import 'package:ecommerce_sample/src/presentation/ui_models/category_quantity_ui_model.dart';
 import 'package:ecommerce_sample/src/presentation/ui_models/product_ui_model.dart';
 import 'package:ecommerce_sample_design_system/ecommerce_sample_design_system.dart';
 import 'package:flutter/material.dart';
@@ -18,8 +19,8 @@ class SearchPageTemplate extends StatelessWidget {
   /// Lista de Productos
   final List<ProductUiModel> products;
 
-  /// Lista de indicadores de categoría para mostrar.
-  final List<QuantityIndicator> categoryIndicators;
+  /// Lista de categorias con cantidades
+  final List<CategoryQuantityUiModel> categories;
 
   /// Indicador de si se está cargando la data.
   final bool isLoading;
@@ -30,16 +31,21 @@ class SearchPageTemplate extends StatelessWidget {
   /// Mensaje a mostrar cuando no se encuentran productos.
   final String? noProductsMessage;
 
+  /// Función de devolución de llamada que se llama cuando se toca un elemento
+  /// de lista de filtro. Ejemplo: Lista de categorías.
+  final VoidCallback? onFilterSelected;
+
   const SearchPageTemplate({
     super.key,
     required this.searchController,
     required this.onSearchSubmitted,
     required this.productListTitle,
     required this.products,
-    required this.categoryIndicators,
+    required this.categories,
     this.isLoading = false,
     this.errorMessage,
     this.noProductsMessage,
+    this.onFilterSelected,
   });
 
   @override
@@ -86,7 +92,14 @@ class SearchPageTemplate extends StatelessWidget {
                               ),
                               AppSpacing.verticalM,
                               QuantityIndicatorList(
-                                indicators: categoryIndicators,
+                                indicators: categories
+                                    .map(
+                                      (cat) => QuantityIndicator(
+                                        name: cat.name,
+                                        quantity: cat.quantity,
+                                      ),
+                                    )
+                                    .toList(),
                               ),
                             ],
                           ),
@@ -133,6 +146,7 @@ class SearchPageTemplate extends StatelessWidget {
           subtitle: "${product.price}",
           cardOrientation: Axis.horizontal,
           rating: product.rating.rate,
+          onTap: onFilterSelected,
         );
       }).toList(),
     );

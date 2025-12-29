@@ -1,8 +1,8 @@
 import 'package:ecommerce_sample/src/presentation/bloc/search/search_bloc.dart';
 import 'package:ecommerce_sample/src/presentation/templates/search/search_page_template.dart';
 import 'package:ecommerce_package_sample/ecommerce_package_sample.dart';
+import 'package:ecommerce_sample/src/presentation/ui_models/category_quantity_ui_model.dart';
 import 'package:ecommerce_sample/src/presentation/ui_models/product_ui_model.dart';
-import 'package:ecommerce_sample_design_system/ecommerce_sample_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -53,7 +53,7 @@ class _SearchPageViewState extends State<_SearchPageView> {
         String? noProductsMessage;
         List<ProductUiModel> products = [];
         String title = "Productos";
-        List<QuantityIndicator> categoryIndicators = []; // Initialize here
+        List<CategoryQuantityUiModel> categories = [];
 
         if (state is SearchError) {
           errorMessage = state.message;
@@ -66,10 +66,7 @@ class _SearchPageViewState extends State<_SearchPageView> {
           }
           products = state.displayProducts;
 
-          // Construir la lista de QuantityIndicator a partir del estado del bloc
-          categoryIndicators = state.categoryQuantities.entries.map((entry) {
-            return QuantityIndicator(name: entry.key, quantity: entry.value);
-          }).toList();
+          categories = state.categoryQuantities;
         }
 
         return SearchPageTemplate(
@@ -82,7 +79,7 @@ class _SearchPageViewState extends State<_SearchPageView> {
           noProductsMessage: noProductsMessage,
           productListTitle: title,
           products: products,
-          categoryIndicators: categoryIndicators, // Pasar la lista al template
+          categories: categories,
         );
       },
     );

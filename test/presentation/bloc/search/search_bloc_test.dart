@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:ecommerce_package_sample/ecommerce_package_sample.dart';
 import 'package:ecommerce_sample/src/presentation/bloc/search/search_bloc.dart';
+import 'package:ecommerce_sample/src/presentation/ui_models/category_quantity_ui_model.dart';
 import 'package:ecommerce_sample/src/presentation/ui_models/product_ui_model.dart';
 import 'package:ecommerce_sample/src/presentation/ui_models/rating_ui_model.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -87,6 +88,39 @@ void main() {
                 (state) => state.displayProducts.first,
                 'first displayed product',
                 expectedProducts.first,
+              ),
+        ),
+      );
+    });
+  });
+
+  group('Products Categories', () {
+    test('Should return categories with quantities', () async {
+      final expectedCategories = [
+        CategoryQuantityUiModel(name: "Ropa", quantity: 2),
+      ];
+      when(
+        () => mockGetAllProductsUseCase.call(),
+      ).thenAnswer((_) async => Right(mockProductsEntities));
+      final searchText = "";
+
+      // Act
+      sut.add(SearchProducts(searchText));
+
+      // Assert
+      expectLater(
+        sut.stream,
+        emits(
+          isA<SearchLoaded>()
+              .having(
+                (state) => state.categoryQuantities.length,
+                'categories  length',
+                1,
+              )
+              .having(
+                (state) => state.categoryQuantities,
+                'categories with 2 products',
+                expectedCategories,
               ),
         ),
       );

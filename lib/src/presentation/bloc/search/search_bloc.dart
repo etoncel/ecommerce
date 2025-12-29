@@ -1,4 +1,5 @@
 import 'package:ecommerce_package_sample/ecommerce_package_sample.dart';
+import 'package:ecommerce_sample/src/presentation/ui_models/category_quantity_ui_model.dart';
 import 'package:ecommerce_sample/src/presentation/ui_models/product_ui_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -40,11 +41,19 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
             (categoryQuantities[product.category] ?? 0) + 1;
       }
 
+      final List<CategoryQuantityUiModel> categoryQuantityList = [];
+
+      for (var category in categoryQuantities.entries.toList()) {
+        categoryQuantityList.add(
+          CategoryQuantityUiModel(name: category.key, quantity: category.value),
+        );
+      }
+
       emit(
         SearchLoaded(
           allProducts: products,
           displayProducts: filteredProducts,
-          categoryQuantities: categoryQuantities,
+          categoryQuantities: categoryQuantityList,
           searchQuery: event.query,
         ),
       );

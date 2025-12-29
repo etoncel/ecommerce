@@ -16,20 +16,20 @@ class SearchLoaded extends SearchState {
   final List<ProductUiModel> allProducts;
   final List<ProductUiModel> displayProducts;
   final String searchQuery;
-  final Map<String, int> categoryQuantities;
+  final List<CategoryQuantityUiModel> categoryQuantities;
 
   const SearchLoaded({
     required this.allProducts,
     required this.displayProducts,
     this.searchQuery = '',
-    this.categoryQuantities = const {},
+    this.categoryQuantities = const [],
   });
 
   SearchLoaded copyWith({
     List<ProductUiModel>? allProducts,
     List<ProductUiModel>? displayProducts,
     String? searchQuery,
-    Map<String, int>? categoryQuantities,
+    final List<CategoryQuantityUiModel>? categoryQuantities,
   }) {
     return SearchLoaded(
       allProducts: allProducts ?? this.allProducts,
