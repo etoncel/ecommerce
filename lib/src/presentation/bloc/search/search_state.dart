@@ -13,8 +13,8 @@ class SearchLoading extends SearchState {
 }
 
 class SearchLoaded extends SearchState {
-  final List<ProductEntity> allProducts;
-  final List<ProductEntity> displayProducts;
+  final List<ProductUiModel> allProducts;
+  final List<ProductUiModel> displayProducts;
   final String searchQuery;
   final Map<String, int> categoryQuantities;
 
@@ -26,8 +26,8 @@ class SearchLoaded extends SearchState {
   });
 
   SearchLoaded copyWith({
-    List<ProductEntity>? allProducts,
-    List<ProductEntity>? displayProducts,
+    List<ProductUiModel>? allProducts,
+    List<ProductUiModel>? displayProducts,
     String? searchQuery,
     Map<String, int>? categoryQuantities,
   }) {

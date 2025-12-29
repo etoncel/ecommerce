@@ -1,3 +1,4 @@
+import 'package:ecommerce_sample/src/presentation/ui_models/product_ui_model.dart';
 import 'package:ecommerce_sample_design_system/ecommerce_sample_design_system.dart';
 import 'package:flutter/material.dart';
 
@@ -14,8 +15,8 @@ class SearchPageTemplate extends StatelessWidget {
   /// Título para la lista de productos.
   final String productListTitle;
 
-  /// Lista de widgets de tarjeta de producto para mostrar.
-  final List<ProductCard> productCards;
+  /// Lista de Productos
+  final List<ProductUiModel> products;
 
   /// Lista de indicadores de categoría para mostrar.
   final List<QuantityIndicator> categoryIndicators;
@@ -34,7 +35,7 @@ class SearchPageTemplate extends StatelessWidget {
     required this.searchController,
     required this.onSearchSubmitted,
     required this.productListTitle,
-    required this.productCards,
+    required this.products,
     required this.categoryIndicators,
     this.isLoading = false,
     this.errorMessage,
@@ -125,7 +126,15 @@ class SearchPageTemplate extends StatelessWidget {
     }
     return VerticalProductList(
       title: productListTitle,
-      productCards: productCards,
+      productCards: products.map((product) {
+        return ProductCard(
+          imageUrl: product.image,
+          title: product.title,
+          subtitle: "${product.price}",
+          cardOrientation: Axis.horizontal,
+          rating: product.rating.rate,
+        );
+      }).toList(),
     );
   }
 }

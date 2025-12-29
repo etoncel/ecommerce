@@ -1,4 +1,5 @@
 import 'package:ecommerce_package_sample/ecommerce_package_sample.dart';
+import 'package:ecommerce_sample/src/presentation/ui_models/product_ui_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'search_event.dart';
@@ -19,7 +20,12 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     Emitter<SearchState> emit,
   ) async {
     final result = await getAllProductsUseCase();
-    result.fold((error) => emit(SearchError(error.toString())), (products) {
+    result.fold((error) => emit(SearchError(error.toString())), (
+      productsEntities,
+    ) {
+      final products = productsEntities
+          .map((product) => ProductUiModel.fromEntity(product))
+          .toList();
       final filteredProducts = products
           .where(
             (product) =>

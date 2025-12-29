@@ -1,6 +1,7 @@
 import 'package:ecommerce_sample/src/presentation/bloc/search/search_bloc.dart';
 import 'package:ecommerce_sample/src/presentation/templates/search/search_page_template.dart';
 import 'package:ecommerce_package_sample/ecommerce_package_sample.dart';
+import 'package:ecommerce_sample/src/presentation/ui_models/product_ui_model.dart';
 import 'package:ecommerce_sample_design_system/ecommerce_sample_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -50,7 +51,7 @@ class _SearchPageViewState extends State<_SearchPageView> {
         bool isLoading = state is SearchLoading;
         String? errorMessage;
         String? noProductsMessage;
-        List<ProductCard> productCards = [];
+        List<ProductUiModel> products = [];
         String title = "Productos";
         List<QuantityIndicator> categoryIndicators = []; // Initialize here
 
@@ -63,15 +64,7 @@ class _SearchPageViewState extends State<_SearchPageView> {
                 ? "No se encontraron productos para '${state.searchQuery}'"
                 : "No hay productos disponibles.";
           }
-          productCards = state.displayProducts.map((product) {
-            return ProductCard(
-              imageUrl: product.image,
-              title: product.title,
-              subtitle: "${product.price}",
-              cardOrientation: Axis.horizontal,
-              rating: product.rating.rate,
-            );
-          }).toList();
+          products = state.displayProducts;
 
           // Construir la lista de QuantityIndicator a partir del estado del bloc
           categoryIndicators = state.categoryQuantities.entries.map((entry) {
@@ -88,7 +81,7 @@ class _SearchPageViewState extends State<_SearchPageView> {
           errorMessage: errorMessage,
           noProductsMessage: noProductsMessage,
           productListTitle: title,
-          productCards: productCards,
+          products: products,
           categoryIndicators: categoryIndicators, // Pasar la lista al template
         );
       },
