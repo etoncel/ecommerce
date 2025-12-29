@@ -13,3 +13,13 @@ class SearchProducts extends SearchEvent {
 
   const SearchProducts(this.query);
 }
+
+class SearchCategorySelected extends SearchEvent {
+  final String selectedCategory;
+
+  SearchCategorySelected({required this.selectedCategory});
+}
+
+class SearchCategoryUnSelected extends SearchEvent {
+  SearchCategoryUnSelected();
+}

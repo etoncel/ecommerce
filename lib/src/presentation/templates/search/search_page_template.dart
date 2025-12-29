@@ -31,9 +31,18 @@ class SearchPageTemplate extends StatelessWidget {
   /// Mensaje a mostrar cuando no se encuentran productos.
   final String? noProductsMessage;
 
+  /// Cadena que indica el valor del filtro aplicado que se debe mostrar
+  ///
+  /// Puede ser nulo.
+  final String? selectedFilter;
+
   /// Función de devolución de llamada que se llama cuando se toca un elemento
   /// de lista de filtro. Ejemplo: Lista de categorías.
-  final VoidCallback? onFilterSelected;
+  final Function(int)? onFilterSelected;
+
+  /// Función de devolución de llamada que se llama cuando se toca un elemento
+  /// de filtro aplicado para cancelarlo.
+  final VoidCallback? onFilterUnselected;
 
   const SearchPageTemplate({
     super.key,
@@ -42,10 +51,12 @@ class SearchPageTemplate extends StatelessWidget {
     required this.productListTitle,
     required this.products,
     required this.categories,
+    this.selectedFilter,
     this.isLoading = false,
     this.errorMessage,
     this.noProductsMessage,
     this.onFilterSelected,
+    this.onFilterUnselected,
   });
 
   @override
@@ -91,16 +102,25 @@ class SearchPageTemplate extends StatelessWidget {
                                 style: AppTextStyles.headline2,
                               ),
                               AppSpacing.verticalM,
-                              QuantityIndicatorList(
-                                indicators: categories
-                                    .map(
-                                      (cat) => QuantityIndicator(
-                                        name: cat.name,
-                                        quantity: cat.quantity,
-                                      ),
-                                    )
-                                    .toList(),
-                              ),
+                              if (selectedFilter == null ||
+                                  selectedFilter == '')
+                                QuantityIndicatorList(
+                                  indicators: categories
+                                      .map(
+                                        (cat) => QuantityIndicator(
+                                          name: cat.name,
+                                          quantity: cat.quantity,
+                                        ),
+                                      )
+                                      .toList(),
+                                  onIndicatorSelected: onFilterSelected,
+                                )
+                              else
+                                AppIconButton(
+                                  text: selectedFilter!,
+                                  icon: AppIcon(iconData: Icons.close),
+                                  onTap: () => onFilterUnselected?.call(),
+                                ),
                             ],
                           ),
                         ),
@@ -137,18 +157,20 @@ class SearchPageTemplate extends StatelessWidget {
         ),
       );
     }
-    return VerticalProductList(
-      title: productListTitle,
-      productCards: products.map((product) {
-        return ProductCard(
-          imageUrl: product.image,
-          title: product.title,
-          subtitle: "${product.price}",
-          cardOrientation: Axis.horizontal,
-          rating: product.rating.rate,
-          onTap: onFilterSelected,
-        );
-      }).toList(),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.spaceL),
+      child: VerticalProductList(
+        title: productListTitle,
+        productCards: products.map((product) {
+          return ProductCard(
+            imageUrl: product.image,
+            title: product.title,
+            subtitle: "${product.price}",
+            cardOrientation: Axis.horizontal,
+            rating: product.rating.rate,
+          );
+        }).toList(),
+      ),
     );
   }
 }

@@ -17,12 +17,14 @@ class SearchLoaded extends SearchState {
   final List<ProductUiModel> displayProducts;
   final String searchQuery;
   final List<CategoryQuantityUiModel> categoryQuantities;
+  final String? selectedCategory;
 
   const SearchLoaded({
     required this.allProducts,
     required this.displayProducts,
     this.searchQuery = '',
     this.categoryQuantities = const [],
+    this.selectedCategory,
   });
 
   SearchLoaded copyWith({
@@ -30,12 +32,14 @@ class SearchLoaded extends SearchState {
     List<ProductUiModel>? displayProducts,
     String? searchQuery,
     final List<CategoryQuantityUiModel>? categoryQuantities,
+    String? selectedCategory,
   }) {
     return SearchLoaded(
       allProducts: allProducts ?? this.allProducts,
       displayProducts: displayProducts ?? this.displayProducts,
       searchQuery: searchQuery ?? this.searchQuery,
       categoryQuantities: categoryQuantities ?? this.categoryQuantities,
+      selectedCategory: selectedCategory ?? this.selectedCategory,
     );
   }
 }

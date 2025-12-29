@@ -53,6 +53,7 @@ class _SearchPageViewState extends State<_SearchPageView> {
         String? noProductsMessage;
         List<ProductUiModel> products = [];
         String title = "Productos";
+        String? selectedCategory;
         List<CategoryQuantityUiModel> categories = [];
 
         if (state is SearchError) {
@@ -67,19 +68,32 @@ class _SearchPageViewState extends State<_SearchPageView> {
           products = state.displayProducts;
 
           categories = state.categoryQuantities;
+
+          selectedCategory = state.selectedCategory;
         }
 
         return SearchPageTemplate(
           searchController: _searchController,
-          onSearchSubmitted: (query) {
-            context.read<SearchBloc>().add(SearchProducts(query));
-          },
           isLoading: isLoading,
           errorMessage: errorMessage,
           noProductsMessage: noProductsMessage,
           productListTitle: title,
           products: products,
           categories: categories,
+          selectedFilter: selectedCategory,
+          onSearchSubmitted: (query) {
+            context.read<SearchBloc>().add(SearchProducts(query));
+          },
+          onFilterSelected: (indicatorIndex) {
+            final category =
+                (state as SearchLoaded).categoryQuantities[indicatorIndex];
+            context.read<SearchBloc>().add(
+              SearchCategorySelected(selectedCategory: category.name),
+            );
+          },
+          onFilterUnselected: () {
+            context.read<SearchBloc>().add(SearchCategoryUnSelected());
+          },
         );
       },
     );
