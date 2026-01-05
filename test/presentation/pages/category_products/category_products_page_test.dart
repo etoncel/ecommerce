@@ -3,6 +3,7 @@ import 'package:ecommerce_package_sample/ecommerce_package_sample.dart';
 import 'package:ecommerce_sample/src/presentation/bloc/category_products/category_products_bloc.dart';
 import 'package:ecommerce_sample/src/presentation/pages/category_products/category_products_page.dart';
 import 'package:ecommerce_sample/src/presentation/templates/category_products/category_products_template.dart';
+import 'package:ecommerce_sample_design_system/ecommerce_sample_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -187,5 +188,123 @@ void main() {
       // Finish al Bloc events. Without this the test fails with pending timers error
       await tester.pumpAndSettle();
     });
+  });
+
+  group('CategoryProductsPage Property Tests', () {
+    /// **Feature: category-filtered-products, Property 7: Back Navigation**
+    /// *For any* Category_Products_Page instance, when the back button is pressed,
+    /// the system should navigate back to the Home_Page
+    /// **Validates: Requirements 3.1, 3.2**
+    testWidgets(
+      'Property 7: Back Navigation - should navigate back when back button is pressed',
+      (WidgetTester tester) async {
+        // Property-based test with multiple iterations
+        for (int i = 0; i < 10; i++) {
+          // Generate different category names for property testing
+          final categoryNames = [
+            'electronics',
+            'clothing',
+            'jewelery',
+            'books',
+            'sports',
+            'home-garden',
+            'toys',
+            'beauty',
+            'automotive',
+            'food',
+          ];
+          final categoryName = categoryNames[i % categoryNames.length];
+
+          final mockProducts = [
+            ProductEntity(
+              id: i + 1,
+              title: 'Test Product $i',
+              price: 99.99 + i,
+              description: 'Test Description $i',
+              category: categoryName,
+              image: 'test$i.jpg',
+              rating: RatingEntity(rate: 4.5, count: 100 + i),
+            ),
+          ];
+
+          when(
+            () => mockGetAllProductsUseCase.call(),
+          ).thenAnswer((_) async => Right(mockProducts));
+
+          // Create a navigation stack with home page and category page
+          await tester.pumpWidget(
+            MaterialApp(
+              home: Scaffold(
+                appBar: AppBar(title: Text('Home Page')),
+                body: Builder(
+                  builder: (context) => ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              CategoryProductsPage(categoryName: categoryName),
+                        ),
+                      );
+                    },
+                    child: Text('Go to Category'),
+                  ),
+                ),
+              ),
+            ),
+          );
+
+          await tester.pumpAndSettle();
+
+          // Navigate to CategoryProductsPage
+          await tester.tap(find.text('Go to Category'));
+          await tester.pumpAndSettle();
+
+          // Verify we're on the CategoryProductsPage
+          expect(
+            find.byType(CategoryProductsPage),
+            findsOneWidget,
+            reason:
+                'Should be on CategoryProductsPage for category "$categoryName"',
+          );
+
+          // Check what back navigation widgets are available
+          // The CustomAppBar uses Flutter's AppBar which should automatically show back button
+          final appBar = find.byType(AppBar);
+          expect(appBar, findsOneWidget, reason: 'AppBar should be present');
+
+          // Look for navigation back widgets
+          final backButton = find.byWidgetPredicate(
+            (widget) =>
+                widget is AppIcon && widget.iconData == AppIcons.arrowBack,
+          );
+
+          expect(
+            backButton,
+            findsOneWidget,
+            reason: 'Should have a back button of type AppIcon',
+          );
+
+          await tester.tap(backButton);
+          await tester.pumpAndSettle();
+
+          // Verify we're back on the home page
+          expect(
+            find.byType(CategoryProductsPage),
+            findsNothing,
+            reason: 'Should have navigated away from CategoryProductsPage',
+          );
+
+          expect(
+            find.text('Home Page'),
+            findsOneWidget,
+            reason: 'Should be back on the Home Page',
+          );
+
+          // Reset for next iteration
+          await tester.pumpWidget(Container());
+          await tester.pumpAndSettle();
+        }
+      },
+    );
   });
 }

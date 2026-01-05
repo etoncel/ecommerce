@@ -29,7 +29,11 @@ class CategoryProductsTemplate extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: CustomAppBar(title: '$categoryName Products'),
+      appBar: CustomAppBar(
+        title: '$categoryName Products',
+        leading: AppIcon(iconData: AppIcons.arrowBack),
+        onTapLeadingButton: () => Navigator.pop(context),
+      ),
       body: _buildBody(),
     );
   }
