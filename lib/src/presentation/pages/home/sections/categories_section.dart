@@ -1,5 +1,6 @@
-import 'package:ecommerce_sample/src/presentation/bloc/categories/categories_bloc.dart';
-import 'package:ecommerce_sample/src/presentation/bloc/categories/categories_state.dart';
+import 'package:ecommerce_sample/src/presentation/bloc/categories_section/categories_section_bloc.dart';
+import 'package:ecommerce_sample/src/presentation/bloc/categories_section/categories_section_state.dart';
+import 'package:ecommerce_sample/src/presentation/pages/category_products/category_products_page.dart';
 import 'package:ecommerce_sample_design_system/ecommerce_sample_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,22 +10,30 @@ class CategoriesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CategoriesBloc, CategoriesState>(
+    return BlocBuilder<CategoriesSectionBloc, CategoriesSectionState>(
       builder: (context, state) {
-        if (state is CategoriesInitial) {
+        if (state is CategoriesSectionInitial) {
           return Placeholder();
         }
-        if (state is CategoriesLoading) {
+        if (state is CategoriesSectionLoading) {
           return LinearProgressIndicator();
         }
 
-        if (state is CategoriesLoaded) {
+        if (state is CategoriesSectionLoaded) {
           return SingleHorizontalList(
             items: state.categories
                 .map(
                   (category) => SingleListItemData(
                     imageUrl: category.image,
                     itemName: category.name,
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              CategoryProductsPage(categoryName: category.name),
+                        ),
+                      );
+                    },
                   ),
                 )
                 .toList(),
@@ -32,7 +41,7 @@ class CategoriesSection extends StatelessWidget {
           );
         }
 
-        if (state is CategoriesError) {
+        if (state is CategoriesSectionError) {
           return Text(state.message);
         }
 

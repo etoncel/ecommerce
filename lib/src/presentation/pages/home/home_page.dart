@@ -1,6 +1,6 @@
 import 'package:ecommerce_package_sample/ecommerce_package_sample.dart';
-import 'package:ecommerce_sample/src/presentation/bloc/categories/categories_bloc.dart';
-import 'package:ecommerce_sample/src/presentation/bloc/categories/categories_event.dart';
+import 'package:ecommerce_sample/src/presentation/bloc/categories_section/categories_section_bloc.dart';
+import 'package:ecommerce_sample/src/presentation/bloc/categories_section/categories_section_event.dart';
 
 import 'package:ecommerce_sample/src/presentation/bloc/product/product_bloc.dart';
 import 'package:ecommerce_sample/src/presentation/bloc/product/product_event.dart';
@@ -19,9 +19,9 @@ class HomePage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => CategoriesBloc(
+          create: (context) => CategoriesSectionBloc(
             getCategoriesUseCase: ServiceLocator.instance.get(),
-          )..add(GetCategoriesEvent()),
+          )..add(GetCategoriesSectionEvent()),
           child: CategoriesSection(),
         ),
         BlocProvider(
