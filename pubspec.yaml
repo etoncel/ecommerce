@@ -45,13 +45,16 @@ dependencies:
     #   url: git@github.com:etoncel/ecommerce_design_system.git
     #   ref: v0.0.4
   ecommerce_package_sample:
-    git:
-      url: git@github.com:etoncel/ecommerce_package_sample.git
-      ref: v0.0.3
+    path: ../paquetes_flutter/ecommerce_package_sample
+    # git:
+    #   url: git@github.com:etoncel/ecommerce_package_sample.git
+    #   ref: v0.0.3
   
 
 dev_dependencies:
   flutter_test:
+    sdk: flutter
+  integration_test:
     sdk: flutter
 
   # The "flutter_lints" package below contains a set of recommended lints to
