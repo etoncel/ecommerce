@@ -1,11 +1,13 @@
+import 'package:ecommerce_sample/src/presentation/templates/search/search_page_template_desktop.dart';
+import 'package:ecommerce_sample/src/presentation/templates/search/search_page_template_mobile.dart';
 import 'package:ecommerce_sample/src/presentation/ui_models/category_quantity_ui_model.dart';
 import 'package:ecommerce_sample/src/presentation/ui_models/product_ui_model.dart';
 import 'package:ecommerce_sample_design_system/ecommerce_sample_design_system.dart';
 import 'package:flutter/material.dart';
 
-/// Plantilla que muestra una pantalla de resultados
-/// del componente barra de búsqueda. Es un widget sin estado que
-/// recibe todos los datos y callbacks necesarios para renderizar la UI.
+/// Responsive coordinator template that automatically switches between mobile and desktop layouts
+/// based on screen size. Detects screen width using ResponsiveBreakpoints utility and renders
+/// the appropriate template while maintaining all search state and filter selections.
 class SearchPageTemplate extends StatelessWidget {
   /// Controlador para la barra de búsqueda.
   final TextEditingController searchController;
@@ -61,116 +63,34 @@ class SearchPageTemplate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: Center(
-        child: Column(
-          children: [
-            Stack(
-              alignment: AlignmentGeometry.center,
-              children: [
-                Container(color: AppColors.background),
-                Center(
-                  child: Container(
-                    constraints: const BoxConstraints(maxWidth: 1200),
-                    child: CustomAppBar(
-                      showSearchBar: true,
-                      searchController: searchController,
-                      onSubmitted: onSearchSubmitted,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            AppSpacing.verticalL,
-            Expanded(
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 1200),
-                child: SingleChildScrollView(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Flexible(
-                        flex: 2,
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const AppText(
-                                text: "Categories",
-                                style: AppTextStyles.headline2,
-                              ),
-                              AppSpacing.verticalM,
-                              if (selectedFilter == null ||
-                                  selectedFilter == '')
-                                QuantityIndicatorList(
-                                  indicators: categories
-                                      .map(
-                                        (cat) => QuantityIndicator(
-                                          name: cat.name,
-                                          quantity: cat.quantity,
-                                        ),
-                                      )
-                                      .toList(),
-                                  onIndicatorSelected: onFilterSelected,
-                                )
-                              else
-                                AppIconButton(
-                                  text: selectedFilter!,
-                                  icon: AppIcon(iconData: Icons.close),
-                                  onTap: () => onFilterUnselected?.call(),
-                                ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Flexible(flex: 6, child: _buildContent()),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildContent() {
-    if (isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-    if (errorMessage != null) {
-      return Center(
-        child: AppText(
-          text: "Error: $errorMessage",
-          style: AppTextStyles.headline1,
-        ),
+    if (ResponsiveBreakpoints.isMobile(context)) {
+      return SearchPageTemplateMobile(
+        searchController: searchController,
+        onSearchSubmitted: onSearchSubmitted,
+        productListTitle: productListTitle,
+        products: products,
+        categories: categories,
+        selectedFilter: selectedFilter,
+        isLoading: isLoading,
+        errorMessage: errorMessage,
+        noProductsMessage: noProductsMessage,
+        onFilterSelected: onFilterSelected,
+        onFilterUnselected: onFilterUnselected,
+      );
+    } else {
+      return SearchPageTemplateDesktop(
+        searchController: searchController,
+        onSearchSubmitted: onSearchSubmitted,
+        productListTitle: productListTitle,
+        products: products,
+        categories: categories,
+        selectedFilter: selectedFilter,
+        isLoading: isLoading,
+        errorMessage: errorMessage,
+        noProductsMessage: noProductsMessage,
+        onFilterSelected: onFilterSelected,
+        onFilterUnselected: onFilterUnselected,
       );
     }
-    if (noProductsMessage != null) {
-      return Center(
-        child: AppText(
-          text: noProductsMessage!,
-          style: AppTextStyles.headline1,
-        ),
-      );
-    }
-    return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.spaceL),
-      child: VerticalProductList(
-        title: productListTitle,
-        productCards: products.map((product) {
-          return ProductCard(
-            imageUrl: product.image,
-            title: product.title,
-            subtitle: "${product.price}",
-            cardOrientation: Axis.horizontal,
-            rating: product.rating.rate,
-          );
-        }).toList(),
-      ),
-    );
   }
 }
